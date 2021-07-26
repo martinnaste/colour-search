@@ -43,7 +43,26 @@
   width: 50px;
 }
 
-.center {
+.center-table {
   margin-left: auto;
   margin-right: auto;
+  width: 30%;
+} 
+
+.td {
+  text-align: left;
+}
+
+.td-s {
+  text-align: left;
+  padding-left: 5%;
+}
+
+.th {
+  text-align: left;
+}
+
+.th-s {
+  text-align: left;
+  padding-left: 5%;
 }

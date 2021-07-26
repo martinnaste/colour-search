@@ -14,33 +14,33 @@ const Colours = ({colours}) => {
       
 
     return (
-        <table className="center">
+        <table className="center-table">
             <thead>
                 <tr>
                     <th> </th>
-                    <th>Colour</th>
-                    <th>Hex</th>
-                    <th>RBG</th>
+                    <th className="th-s">Colour</th>
+                    <th className="th">Hex</th>
+                    <th className="th">RBG</th>
                 </tr>
             </thead>
             <tbody>
                 {colours.length !== 0 ? 
                 colours.colors.map((colour) => (
                     <tr key={colour.hex.toString()}>
-                        <td>
+                        <td className="td">
                             <div className="square" 
                                 style={{
                                     backgroundColor: `${colour.hex}`
                                 }}
                             />
                         </td>
-                        <td>
+                        <td className="td-s">
                             {colour.color}
                         </td>
-                        <td>
+                        <td className="td">
                             {colour.hex}
                         </td>
-                        <td>
+                        <td className="td">
                             {hexToRgb(colour.hex.toString())}
                         </td>
                     </tr>                    
