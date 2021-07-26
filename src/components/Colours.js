@@ -1,6 +1,9 @@
-import React from 'react'
+import React, {useState} from 'react'
+import SearchBar from './SearchBar';
 
 const Colours = ({colours}) => {
+    const [searchVal, setSearchVal] = useState("");
+
 
     // taken from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
     function hexToRgb(hex) {
@@ -10,51 +13,66 @@ const Colours = ({colours}) => {
         var b = parseInt(result[3], 16)
         var res = r +', ' + g + ', ' + b
         return result ? res : null;
-      }
-      
+    }
+
+    const search = (e) => {
+        console.log("e ", e);
+        setSearchVal(e);
+    }
 
     return (
-        <table className="center-table">
-            <thead>
-                <tr>
-                    <th> </th>
-                    <th className="th-s">Colour</th>
-                    <th className="th">Hex</th>
-                    <th className="th">RBG</th>
-                </tr>
-            </thead>
-            <tbody>
-                {colours.length !== 0 ? 
-                colours.colors.map((colour) => (
-                    <tr key={colour.hex.toString()}>
-                        <td className="td">
-                            <div className="square" 
-                                style={{
-                                    backgroundColor: `${colour.hex}`
-                                }}
-                            />
+        <div>
+            <SearchBar search={search}/>
+            {<table className="center-table">
+                <thead>
+                    <tr>
+                        <th> </th>
+                        <th className="th-s">Colour</th>
+                        <th className="th">Hex</th>
+                        <th className="th">RBG</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {colours.length !== 0 ? 
+                    colours.colors.filter((colour => {
+                        if(searchVal === ""){
+                            return colour
+                        } else if(colour.color.includes(searchVal.toLowerCase())){
+                            return colour
+                        }
+                    })).map((colour) => (
+                        <tr key={colour.hex.toString()}>
+                            <td className="td">
+                                <div className="square" 
+                                    style={{
+                                        backgroundColor: `${colour.hex}`
+                                    }}
+                                />
+                            </td>
+                            <td className="td-s">
+                                {colour.color}
+                            </td>
+                            <td className="td">
+                                {colour.hex}
+                            </td>
+                            <td className="td">
+                                {hexToRgb(colour.hex.toString())}
+                            </td>
+                        </tr>                    
+                    )) 
+                    : 
+                    <tr>
+                        <td>
+                            <h2>Loading</h2>
                         </td>
-                        <td className="td-s">
-                            {colour.color}
-                        </td>
-                        <td className="td">
-                            {colour.hex}
-                        </td>
-                        <td className="td">
-                            {hexToRgb(colour.hex.toString())}
-                        </td>
-                    </tr>                    
-                )) 
-                : 
-                <tr>
-                    <td>
-                        <h2>Loading</h2>
-                    </td>
-                </tr>}
+                    </tr>}
 
-                
-            </tbody>
-        </table>
+                    
+                </tbody>
+            </table>}
+        </div>
+
+        
     )
 }
 
