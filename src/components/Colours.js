@@ -1,29 +1,11 @@
-import React, {useState} from 'react'
-import SearchBar from './SearchBar';
+import React from 'react'
+import {hexToRgbString} from './Functions'
 
 const Colours = ({colours}) => {
-    const [searchVal, setSearchVal] = useState("");
-
-
-    // taken from https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-    function hexToRgb(hex) {
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        var r = parseInt(result[1], 16)
-        var g = parseInt(result[2], 16)
-        var b = parseInt(result[3], 16)
-        var res = r +', ' + g + ', ' + b
-        return result ? res : null;
-    }
-
-    const search = (e) => {
-        console.log("e ", e);
-        setSearchVal(e);
-    }
 
     return (
         <div>
-            <SearchBar search={search}/>
-            {<table className="center-table">
+            <table className="center-table" id="tableID">
                 <thead>
                     <tr>
                         <th> </th>
@@ -34,13 +16,7 @@ const Colours = ({colours}) => {
                 </thead>
                 <tbody>
                     {colours.length !== 0 ? 
-                    colours.colors.filter((colour => {
-                        if(searchVal === ""){
-                            return colour
-                        } else if(colour.color.includes(searchVal.toLowerCase())){
-                            return colour
-                        }
-                    })).map((colour) => (
+                    colours.colors.map((colour) => (
                         <tr key={colour.hex.toString()}>
                             <td className="td">
                                 <div className="square" 
@@ -56,7 +32,7 @@ const Colours = ({colours}) => {
                                 {colour.hex}
                             </td>
                             <td className="td">
-                                {hexToRgb(colour.hex.toString())}
+                                {hexToRgbString(colour.hex.toString())}
                             </td>
                         </tr>                    
                     )) 
@@ -66,14 +42,30 @@ const Colours = ({colours}) => {
                             <h2>Loading</h2>
                         </td>
                     </tr>}
-
-                    
                 </tbody>
-            </table>}
+            </table>
         </div>
 
         
     )
 }
+
+// colours.length !== 0 ? 
+// colours.colors.filter((colour => {
+//     // if(searchVal === ""){
+//     //     return colour
+//     //     //return the mapping of all of them 
+//     // } else if(searchValType === 0 && colour.color.includes(searchVal.toLowerCase())){ //colour name
+//     //     return colour
+//     // } else if(searchValType === 2){ //rgb
+
+
+//     //     //add all distances to array, sort array by distance asc. distance and hex key values? return the mapping of the new array
+//     //     // console.log("distance ", dist);
+//     // } else if(searchValType === 1) { // hex
+//     //     // need to go to rgb then do distance
+//     // }
+//     return colour
+// })).map((colour) => (
 
 export default Colours
