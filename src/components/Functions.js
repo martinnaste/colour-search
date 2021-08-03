@@ -1,4 +1,5 @@
-async function hexToRgb(hex) {
+export async function hexToRgb(hex) {
+    //https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
       r: parseInt(result[1], 16),
@@ -46,6 +47,23 @@ export async function rgbToLAB(rgb){
     return lab
 }
 
+export async function labDelta(lab1, lab2) {
+    // console.log("lab1 ", lab1, "lab2 ", lab2);
+    var l1 = lab1.l
+    var a1 = lab1.a
+    var b1 = lab1.b
+    var l2 = lab2.l
+    var a2 = lab2.a
+    var b2 = lab2.b
+    // console.log("lab ", l1, a1, b1, l2, a2, b2);
+
+
+    let delta = Math.sqrt(Math.pow((l1-l2),2) + Math.pow((a1-a2),2) + Math.pow((b1-b2),2))
+    // console.log("delta ", delta);
+    return delta
+
+}
+
 async function modifyColLAB(colour, lab){
     let col = await {...colour, lab: lab}
     return col
@@ -54,9 +72,9 @@ async function modifyColLAB(colour, lab){
 async function addResultLAB(colours) {
     let result = []
     for(const colour of colours) {
-    let lab = await rgbToLAB(colour.rgb)
-    let res = await modifyColLAB(colour, lab);
-    result.push(res)
+        let lab = await rgbToLAB(colour.rgb)
+        let res = await modifyColLAB(colour, lab);
+        result.push(res)
     }
     return result
 }

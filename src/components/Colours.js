@@ -15,8 +15,9 @@ const Colours = ({colours}) => {
                     </tr>
                 </thead>
                 <tbody>
+                    {console.log("col len in colours ", colours.length)}
                     {colours.length !== 0 ? 
-                    colours.colors.map((colour) => (
+                    colours.map((colour) => (
                         <tr key={colour.hex.toString()}>
                             <td className="td">
                                 <div className="square" 
