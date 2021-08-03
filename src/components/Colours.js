@@ -15,7 +15,6 @@ const Colours = ({colours}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {console.log("col len in colours ", colours.length)}
                     {colours.length !== 0 ? 
                     colours.map((colour) => (
                         <tr key={colour.hex.toString()}>
@@ -50,23 +49,5 @@ const Colours = ({colours}) => {
         
     )
 }
-
-// colours.length !== 0 ? 
-// colours.colors.filter((colour => {
-//     // if(searchVal === ""){
-//     //     return colour
-//     //     //return the mapping of all of them 
-//     // } else if(searchValType === 0 && colour.color.includes(searchVal.toLowerCase())){ //colour name
-//     //     return colour
-//     // } else if(searchValType === 2){ //rgb
-
-
-//     //     //add all distances to array, sort array by distance asc. distance and hex key values? return the mapping of the new array
-//     //     // console.log("distance ", dist);
-//     // } else if(searchValType === 1) { // hex
-//     //     // need to go to rgb then do distance
-//     // }
-//     return colour
-// })).map((colour) => (
 
 export default Colours

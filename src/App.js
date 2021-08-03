@@ -24,57 +24,20 @@ function App() {
     const res = await fetch('https://raw.githubusercontent.com/okmediagroup/color-test-resources/master/xkcd-colors.json')
     const data = await res.json()
 
-    console.log("data ", data);
-    console.log("data.colors ", data.colors);
+    console.log("Data ", data);
+    console.log("Data.colors ", data.colors);
     
     let resultRGB = await getResultRGB(data.colors);
-    console.log("res end ", resultRGB);
+    // console.log("Add RGB ", resultRGB);
     let resultLAB = await getResultLAB(resultRGB);
-    console.log("red end 2 ", resultLAB);
+    console.log("Add LAB ", resultLAB);
     return resultLAB
-  }  
-
-  // async function typeCheck(searchValue) {
-  //   // console.log("sval ", searchValue);
-  //   if(searchValue[0] === "#"){
-  //     console.log("its hex ", searchValue);
-  //     const hextorgb = await hexToRgb(searchValue)
-  //     const rgbtolab = await rgbToLAB(hextorgb)
-  //     const labVal = await labValConv(rgbtolab)
-  //     console.log("labval ", labVal);
-  //     const filt = await filterCols(labVal)
-  //     setFiltered(filt)
-  //     // return(labVal)
-  //     // return rgbtolab
-  //     // get lab val corresponding to the hex. run the comparison with everything in the full colours list, and add the distances to another list with the hex value.
-  //     //sort from smallest to largest, return that array as the new colours list, slicing after 100
-  //   } else if(searchValue[0] === "r" && searchValue[1] === "g" && searchValue[2] === "b"){
-  //     console.log("its rgb ", searchValue);
-  //   } else {
-  //     console.log("its text ");
-  //   }
-  // }
+  } 
 
   async function modifyColMod(colour, delta){
     let col = await {...colour, delta: delta}
     return col
-}
-
-  //put labval here and call it from typecheck????
-  // async function labValConv(lab){
-  //   console.log("col mod ", coloursMod, "lab ", lab);
-  //   const deltaModList = []
-  //   for(const colour of coloursMod){
-  //     // console.log("colour in mod ", colour, "mod lab ", colour.lab);
-  //     let labDiff = await labDelta(lab, colour.lab)
-  //     // console.log("labdiff ", labDiff);
-  //     let col = await modifyColMod(colour, labDiff)
-  //     deltaModList.push(col)
-  //     //setColoursMod({...coloursMod, delta: labDiff}) // change this
-  //   }
-  //   // console.log("deltalist ", deltaModList);
-  //   return deltaModList
-  // }
+  }
 
   async function filterCols(list) {
     const newColourList = list.sort((a, b) => {
@@ -83,99 +46,92 @@ function App() {
     return newColourList.slice(0,100)
   }
 
-  // async function filterColsText(searchTerm) {
-  //   const newColourList = coloursMod.color.filter((colour) => {
-  //     if(colour.includes(searchTerm.toLowerCase())){
-  //       return colour
-  //     }
-  //   })
-  //   return newColourList
-  // }
-
   useEffect(() => {
-    //call my functions here?
     if(searchTerm !== "") {
-      //check for error here
       async function labValConv(lab){
-        console.log("col mod ", coloursMod, "lab ", lab);
         const deltaModList = []
         for(const colour of coloursMod){
-          // console.log("colour in mod ", colour, "mod lab ", colour.lab);
           let labDiff = await labDelta(lab, colour.lab)
-          // console.log("labdiff ", labDiff);
           let col = await modifyColMod(colour, labDiff)
           deltaModList.push(col)
         }
-        // console.log("deltalist ", deltaModList);
         return deltaModList
       }
       async function typeCheck(searchValue) {
-        // console.log("sval ", searchValue);
         if(searchValue[0] === "#"){
-          console.log("its hex ", searchValue);
+          console.log("It's hex ", searchValue);
           const hextorgb = await hexToRgb(searchValue)
           const rgbtolab = await rgbToLAB(hextorgb)
           const labVal = await labValConv(rgbtolab)
           const filt = await filterCols(labVal)
           setFiltered(filt)
         } else if(searchValue[0] === "r" && searchValue[1] === "g" && searchValue[2] === "b"){
-          console.log("its rgb ", searchValue);
+          console.log("It's rgb ", searchValue);
           let sp = searchValue.split(",")
           let r = parseInt(sp[0].slice(4))
           let g = parseInt(sp[1])
           let b = parseInt(sp[2])
-          // console.log("sp ", r, g, b);
-          const rgbtolab = await rgbToLAB({r: r, g: g, b: b})
-          const labVal = await labValConv(rgbtolab)
-          const filt = await filterCols(labVal)
-          setFiltered(filt)
+          if(isNaN(r) || isNaN(g) || isNaN(b) ){
+            alert("Input incorrect. Format must be 'rgb(r,g,b)', please check and try again")
+          } else {
+            const rgbtolab = await rgbToLAB({r: r, g: g, b: b})
+            const labVal = await labValConv(rgbtolab)
+            const filt = await filterCols(labVal)
+            setFiltered(filt)
+          }
+          
         } else {
-          console.log("its text ");
+          console.log("It's text ", searchTerm);
           const newColourList = coloursMod.filter((colour) => {
             return colour.color.includes(searchTerm.toLowerCase())
           })
+          if(newColourList.length === 0){
+            alert("No matches found for")
+          }
           setFiltered(newColourList)
         }
       }
       typeCheck(searchTerm)
     } else if(searchTerm === ""){
+      console.log("Resetting Search");
       setFiltered(coloursMod)
     }
   },[coloursMod, searchTerm])
 
   const search = (e) =>{
-    console.log("e ",e);
+    let regexText = /[A-Za-z0-9]/
     if(e[0] === "r" && e[1] === "g" && e[2] === "b" && (e.length >=10 && e.length <= 16)){
       let sp = e.split(",")
       let r = parseInt(sp[0].slice(4))
       let g = parseInt(sp[1])
       let b = parseInt(sp[2])
-      if((r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255)){
+      if((r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255) && e.charAt(e.length-1) === ")"){
         setSearchTerm(e)
       }
       else {
-        //error
+        alert("Input incorrect. Format must be 'rgb(r,g,b)', please check and try again")
       }
     } else if(e.length === 7){
-      let regex = /^#[A-Za-z0-9]/
+      let regex = /^#[a-fA-F0-9]{6}/g 
       let isValid = regex.test(e)
       if(isValid){
         setSearchTerm(e)
       } else {
-        //error
+        alert("Input incorrect. Format must be '#09afAF', please check and try again")
       }
+    } else if((regexText.test(e) || e === "") && e[0] !== "#" ){
+      setSearchTerm(e)
     }
-    // setSearchTerm(e)
+    else{
+      alert("Please check your formatting. It has to be either in 'rgb(r,g,b)', '#09afAF', or plain text")
+    }
   }
 
   return (
     <div className="App">
       <Header />
       <SearchBar onSearch={search}/>
-      {/* {search error thing here } */}
       <Colours colours={filtered.length > 0 ? filtered : colours} />
-      {}
-      
     </div>
   );
 }

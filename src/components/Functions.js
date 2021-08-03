@@ -48,20 +48,15 @@ export async function rgbToLAB(rgb){
 }
 
 export async function labDelta(lab1, lab2) {
-    // console.log("lab1 ", lab1, "lab2 ", lab2);
     var l1 = lab1.l
     var a1 = lab1.a
     var b1 = lab1.b
     var l2 = lab2.l
     var a2 = lab2.a
     var b2 = lab2.b
-    // console.log("lab ", l1, a1, b1, l2, a2, b2);
-
 
     let delta = Math.sqrt(Math.pow((l1-l2),2) + Math.pow((a1-a2),2) + Math.pow((b1-b2),2))
-    // console.log("delta ", delta);
     return delta
-
 }
 
 async function modifyColLAB(colour, lab){
